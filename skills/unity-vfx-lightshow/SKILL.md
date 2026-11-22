@@ -5,13 +5,13 @@ description: Build a real-time organic light show (glowing GPU particle mass, wa
 # Unity VFX light show for Quest
 
 ## Look recipe (what made the WebXR prototype read as "light")
-- Many small particles (64k–300k) + **additive** blending + **bloom** (bloom is what browser/Open Brush lacked).
+- Many small particles (64k–300k) + **additive** blending + baked glow. **Unity 6.3 on Quest with On-Tile Post-Processing (`OnTilePostProcessFeature`) has no Bloom**: paint the halo into sprite textures, use unlit additive materials and layered glow lines. Real Bloom only if you drop on-tile post (costly on Quest — measure first).
 - Dim base glow (the mass is always readable) + bright transient flashes (waves, startles, hand). Too much flash = white blob; none = invisible.
 - Motion: curl-noise flow + attraction to moving "lobes" stretched along their velocity (school-of-fish spine) + soft room boundary + floor clamp. Lobes part/rejoin on slow cycles; startle = radial impulse every 7–15 s.
 - Flash triggers: wave fronts (|dist−r|<band), front edge of fast lobes, high jerk (threshold high, not the always-on cohesion accel), hand proximity, rare random sparks.
 
 ## Unity setup
-- URP asset: HDR on, Post-processing on; Volume with **Bloom** (threshold ~0.8, intensity 0.6–1.2, Fast/low quality on Quest); tonemapping Neutral.
+- URP asset (proven on Quest 3): Forward, MSAA 4x, Render Scale 0.8, HDR off, Linear colour; one unlit URP shader for everything (Additive/Alpha/Opaque variants, Multiview-safe), SRP-Batcher friendly; no shadows/lights.
 - Quest: target 72 Hz; OpenXR + Meta; **Single Pass Instanced**; MSAA 2–4x; Fixed Foveated Rendering medium.
 - VFX Graph: GPU Event-free system; Capacity ≈ 131k to start; Update context with *Turbulence* (curl) + *Conform to SDF/Attractor* for lobes; store `flash` in a custom attribute; Output **Particle Quad, Additive**, size by flash; color gradient deep sea blue → cyan → white.
 - Expose lobe positions/velocities, wave origin/radius, hand positions as **exposed properties**, driven by one C# MonoBehaviour (`SetVector3`, `SetFloat`).

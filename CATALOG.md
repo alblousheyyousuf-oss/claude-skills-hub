@@ -15,6 +15,9 @@
 | procedural-3d-glb | drawings → GLB with numpy/trimesh |
 | beginner-step-guide | step guides for beginners (Arabic RTL) |
 | art-research-sprint | bounded research → decisions (incl. Oman notes) |
+| unity-remote-build | file-triggered compile/build on the user's PC, no screen control |
+| unity-arabic-text | Arabic text in Unity via pre-rendered PIL+raqm images |
+| quest-alpha-release | auto-updating headsets through a Meta ALPHA channel |
 
 ## Vendored (copied with licence, see each `SOURCE.md`)
 | Source | Licence | Skills | Why |
